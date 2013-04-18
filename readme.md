@@ -4,7 +4,7 @@ Slug Behavior
 Usage
 -----
 
-First, add namespace to Yii loader
+First, import class file, i.g in config
 
 ```php
 return array(
@@ -12,8 +12,8 @@ return array(
 
 	// ...
 
-	'aliases' => array(
-   		'Slugable' => 'ext.slug-behavior',
+	'import' => array(
+   		'ext.slug-behavior.SlugBehavior',
     ),
 );
 ```
@@ -25,7 +25,7 @@ public function behaviors()
 {
 	return array(
 		array(
-			'class' => '\Slugable\Slug',
+			'class' => 'SlugBehavior',
 		),
 	);
 }
@@ -38,7 +38,7 @@ public function behaviors()
 {
 	return array(
 		array(
-			'class' => '\Slugable\Slug',
+			'class' => 'SlugBehavior',
 			// @link https://github.com/yiiext/transliterator-component
 			'translator' => array(Yii::app()->trasliterator, 'transliterate'),
 		),
