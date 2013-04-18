@@ -9,7 +9,11 @@
 $basePath = dirname(__FILE__);
 
 /** @todo change the following paths if necessary */
-require($basePath . '/../../../../../frameworks/yii/framework/yiit.php');
+if (file_exists($basePath . '/../yii/framework/yiit.php')) {
+	require($basePath . '/../yii/framework/yiit.php');
+} else {
+	require($basePath . '/../../../../../frameworks/yii/framework/yiit.php');
+}
 
 // make sure non existing PHPUnit classes do not break with Yii autoloader
 Yii::$enableIncludePath = false;
