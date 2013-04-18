@@ -1,7 +1,7 @@
 Slug Behavior
 ===
 
-[![Build Status](https://secure.travis-ci.org/yiiext/slug-behavior.png?branch=master)](https://travis-ci.org/yiiext/slug-behavior)
+[![Build Status](https://travis-ci.org/yiiext/slug-behavior.png?branch=master)](https://travis-ci.org/yiiext/slug-behavior)
 
 Usage
 -----
