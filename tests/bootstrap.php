@@ -18,6 +18,7 @@ Yii::createWebApplication(
 		'basePath' => $basePath,
 		'extensionPath' => $basePath . '/../..',
 		'import' => array(
+			'application.components.*',
 			'application.models.*',
 			'ext.slug-behavior.SlugBehavior',
 		),

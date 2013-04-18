@@ -14,11 +14,14 @@
  * @property string $title
  * @property string $slug
  *
+ * Behavior
+ * @property SlugBehavior $slugable
+ * @method SlugTestPost findBySlug($slug)
+ *
  * Core
  * @method SlugTestPost with()
  * @method SlugTestPost find()
  * @method SlugTestPost findByPk($pk)
- * @method SlugTestPost findBySlug($slug)
  *
  * @author Veaceslav Medvedev <slavcopost@gmail.com>
  * @version 0.1
