@@ -33,7 +33,7 @@ public function behaviors()
 }
 ```
 
-Advanced slug, used translator closure, i.g. Transliterator component:
+Advanced slug, used translator closure, i.g. [Transliterator component](https://github.com/yiiext/transliterator-component):
 
 ```php
 public function behaviors()
