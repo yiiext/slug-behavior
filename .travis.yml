@@ -2,11 +2,9 @@ language: php
 
 php:
   - 5.2
-  - 5.3
-  - 5.4
 
 before_script:
   - git clone --depth=100 https://github.com/yiisoft/yii.git yii
   - cd tests
 
-script: phpunit --colors --coverage-text unit
+script: phpunit --colors --coverage-text controllers/SlugTestController.php
