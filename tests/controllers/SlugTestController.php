@@ -6,15 +6,13 @@
  * @license http://www.opensource.org/licenses/bsd-license.php
  */
 
-use CDbTestCase as TestCase;
-
 /**
  * Class DefaultController
  *
  * @author Veaceslav Medvedev <slavcopost@gmail.com>
  * @version 0.1
  */
-class SlugTestController extends TestCase
+class SlugTestController extends CDbTestCase
 {
 	public $fixtures = array(
 		':post',
