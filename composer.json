@@ -1,0 +1,24 @@
+{
+	"name": "yiiext/slug-behavior",
+	"description": "Slug Behavior Yii Extension",
+	"keywords": ["slug", "clean-url", "yii"],
+	"homepage": "https://github.com/yiiext/slug-behavior",
+	"type": "library",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Veaceslav Medvedev",
+			"email": "slavcopost@gmail.com"
+		},
+
+	],
+	"support": {
+		"issues": "https://github.com/yiiext/slug-behavior/issues",
+		"wiki": "https://github.com/yiiext/slug-behavior/wiki",
+		"source": "https://github.com/yiiext/slug-behavior"
+	},
+	"require": {
+		"php": ">=5.1.0",
+		"yiisoft/yii": "master"
+	}
+}
