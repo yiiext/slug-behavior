@@ -9,7 +9,6 @@
 /**
  * Class SlugBehavior
  *
- * @property CActiveRecord $owner
  * @method CActiveRecord getOwner()
  *
  * @author Veaceslav Medvedev <slavcopost@gmail.com>
@@ -32,20 +31,43 @@ class SlugBehavior extends CBehavior
 	public $replacements = array();
 	/** @var callable */
 	public $translator;
+	/** @var array */
+	public $scenarios = array('insert', 'update');
 
 	public function events()
 	{
 		return array(
-			'onBeforeSave' => 'beforeSave',
+			'onBeforeValidate' => 'addSlugValidators',
 		);
 	}
 
-	public function beforeSave($event)
+	public function addSlugValidators()
 	{
-		$title = $this->owner->getAttribute($this->sourceAttribute);
-		if (!empty($title)) {
-			$this->getOwner()->setAttribute($this->slugAttribute, $this->generateSlug($title));
+		$owner = $this->getOwner();
+
+		if (in_array($owner->getScenario(), $this->scenarios)) {
+			$list = $owner->getValidatorList();
+			$list->add(CValidator::createValidator('validateExistsSlug', $this, $this->slugAttribute));
+			$list->add(CValidator::createValidator('validateUniqueSlug', $this, $this->slugAttribute));
 		}
+	}
+
+	public function validateExistsSlug()
+	{
+		$owner = $this->getOwner();
+		$title = $owner->getAttribute($this->sourceAttribute);
+		if (!empty($title)) {
+			$owner->setAttribute($this->slugAttribute, $this->generateSlug($title));
+		}
+	}
+
+	public function validateUniqueSlug()
+	{
+		$owner = $this->getOwner();
+		CValidator::createValidator('unique', $owner, $this->slugAttribute)->validate($owner, $this->slugAttribute);
+		$owner->addErrors(array(
+				$this->sourceAttribute => $owner->getErrors($this->slugAttribute)
+			));
 	}
 
 	public function findBySlug($slug, $condition = '', array $params = array())
