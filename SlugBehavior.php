@@ -12,11 +12,14 @@
  * @method CActiveRecord getOwner()
  *
  * @author Veaceslav Medvedev <slavcopost@gmail.com>
- * @version 0.1
+ * @version 0.2
  * @package yiiext/slug-behavior
  */
 class SlugBehavior extends CBehavior
 {
+	const ID_APPEND = 'append';
+	const ID_PREPEND = 'prepend';
+
 	/** @var string */
 	public $sourceAttribute = 'title';
 	/** @var string */
@@ -33,6 +36,8 @@ class SlugBehavior extends CBehavior
 	public $translator;
 	/** @var array */
 	public $scenarios = array('insert', 'update');
+	/** @var string */
+	public $addId;
 
 	public function events()
 	{
@@ -45,7 +50,7 @@ class SlugBehavior extends CBehavior
 	{
 		$owner = $this->getOwner();
 
-		if (in_array($owner->getScenario(), $this->scenarios)) {
+		if (empty($this->scenarios) || in_array($owner->getScenario(), $this->scenarios)) {
 			$list = $owner->getValidatorList();
 			$list->add(CValidator::createValidator('validateExistsSlug', $this, $this->slugAttribute));
 			$list->add(CValidator::createValidator('validateUniqueSlug', $this, $this->slugAttribute));
@@ -55,7 +60,7 @@ class SlugBehavior extends CBehavior
 	public function validateExistsSlug()
 	{
 		$owner = $this->getOwner();
-		$title = $owner->getAttribute($this->sourceAttribute);
+		$title = $owner->{$this->sourceAttribute};
 		if (!empty($title)) {
 			$owner->setAttribute($this->slugAttribute, $this->generateSlug($title));
 		}
@@ -77,8 +82,19 @@ class SlugBehavior extends CBehavior
 
 	public function filterBySlug($slug, $operator = 'AND')
 	{
-		$this->getOwner()->getDbCriteria()->compare($this->slugAttribute, $slug, false, $operator);
-		return $this->getOwner();
+		$owner = $this->getOwner();
+		$alias = $owner->getTableAlias();
+
+		if ($this->addId === self::ID_APPEND) {
+			$id = substr($slug, 0, strpos($slug, $this->delimiter));
+			$owner->getDbCriteria()->compare($alias . '.id', $id, false, $operator);
+		} elseif ($this->addId === self::ID_PREPEND) {
+			$id = substr($slug, strpos($slug, $this->delimiter) + 1);
+			$owner->getDbCriteria()->compare($alias . '.id', $id, false, $operator);
+		} else {
+			$owner->getDbCriteria()->compare($alias . $this->slugAttribute, $slug, false, $operator);
+		}
+		return $owner;
 	}
 
 	protected function generateSlug($string)
@@ -106,6 +122,16 @@ class SlugBehavior extends CBehavior
 		// Remove delimiter from ends
 		$string = trim($string, $this->delimiter);
 
-		return $this->lowercase ? mb_strtolower($string, 'UTF-8') : $string;
+		if ($this->lowercase) {
+			$string = mb_strtolower($string, 'UTF-8');
+		}
+
+		if ($this->addId === self::ID_APPEND) {
+			$string = $this->getOwner()->id . $this->delimiter . $string;
+		} elseif ($this->addId === self::ID_PREPEND) {
+			$string = $string . $this->delimiter . $this->getOwner()->id;
+		}
+
+		return $string;
 	}
 }
