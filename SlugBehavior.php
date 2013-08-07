@@ -77,7 +77,9 @@ class SlugBehavior extends CBehavior
 
 	public function filterBySlug($slug, $operator = 'AND')
 	{
-		$this->getOwner()->getDbCriteria()->compare($this->slugAttribute, $slug, false, $operator);
+		$this->getOwner()->getDbCriteria()
+			->addCondition($this->slugAttribute . '=:slug', $operator)
+			->params[':slug'] = $slug;
 		return $this->getOwner();
 	}
 
