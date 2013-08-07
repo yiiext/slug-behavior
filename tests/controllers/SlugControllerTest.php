@@ -1,18 +1,18 @@
 <?php
 /**
- * SlugTestController class file.
+ * SlugControllerTest class file.
  *
  * @author Veaceslav Medvedev <slavcopost@gmail.com>
  * @license http://www.opensource.org/licenses/bsd-license.php
  */
 
 /**
- * Class DefaultController
+ * Class SlugControllerTest
  *
  * @author Veaceslav Medvedev <slavcopost@gmail.com>
  * @version 0.1
  */
-class SlugTestController extends CDbTestCase
+class SlugControllerTest extends CDbTestCase
 {
 	public $fixtures = array(
 		':post',
@@ -22,7 +22,7 @@ class SlugTestController extends CDbTestCase
 	{
 		$post = new SlugTestPost();
 		$post->attributes = array(
-			'title' => 'Lorem ipsum dolor.',
+			'title' => 'Lorem ipsum dolor?',
 		);
 
 		$this->assertTrue($post->save(), 'Assert model successeful saves.');
