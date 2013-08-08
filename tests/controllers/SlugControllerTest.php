@@ -6,10 +6,6 @@
  * @license http://www.opensource.org/licenses/bsd-license.php
  */
 
-Yii::import('system.test.CTestCase');
-Yii::import('system.test.CDbTestCase');
-Yii::import('system.test.CWebTestCase');
-
 /**
  * Class SlugControllerTest
  *

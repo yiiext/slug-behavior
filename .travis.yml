@@ -6,4 +6,4 @@ php:
 before_script:
   - git clone --depth=100 https://github.com/yiisoft/yii.git yii
 
-script: phpunit --colors --coverage-text --include-path ./yii/framework tests/controllers/SlugControllerTest.php --configuration ./tests/phpunit.xml.dist
+script: phpunit --include-path ./yii/framework --configuration ./tests/phpunit.xml.dist tests/controllers/SlugControllerTest.php
