@@ -47,8 +47,16 @@ class SlugBehavior extends CBehavior
 
 		if (in_array($owner->getScenario(), $this->scenarios)) {
 			$list = $owner->getValidatorList();
-			$list->add(CValidator::createValidator('validateExistsSlug', $this, $this->slugAttribute));
-			$list->add(CValidator::createValidator('validateUniqueSlug', $this, $this->slugAttribute));
+			$list->add(CValidator::createValidator(
+					'validateExistsSlug',
+					$this,
+					$this->slugAttribute
+				));
+			$list->add(CValidator::createValidator(
+					'validateUniqueSlug',
+					$this,
+					$this->slugAttribute
+				));
 		}
 	}
 
@@ -56,6 +64,7 @@ class SlugBehavior extends CBehavior
 	{
 		$owner = $this->getOwner();
 		$title = $owner->getAttribute($this->sourceAttribute);
+
 		if (!empty($title)) {
 			$owner->setAttribute($this->slugAttribute, $this->generateSlug($title));
 		}
@@ -64,7 +73,9 @@ class SlugBehavior extends CBehavior
 	public function validateUniqueSlug()
 	{
 		$owner = $this->getOwner();
-		CValidator::createValidator('unique', $owner, $this->slugAttribute)->validate($owner, $this->slugAttribute);
+		CValidator::createValidator('unique', $owner, $this->slugAttribute)
+			->validate($owner, $this->slugAttribute);
+		// Duplicate errors to source attribute, for show it in forms.
 		$owner->addErrors(array(
 				$this->sourceAttribute => $owner->getErrors($this->slugAttribute)
 			));
@@ -77,9 +88,11 @@ class SlugBehavior extends CBehavior
 
 	public function filterBySlug($slug, $operator = 'AND')
 	{
-		$this->getOwner()->getDbCriteria()
+		$owner = $this->getOwner();
+		$owner->getDbCriteria()
 			->addCondition($this->slugAttribute . '=:slug', $operator)
 			->params[':slug'] = $slug;
+
 		return $this->getOwner();
 	}
 
@@ -108,6 +121,11 @@ class SlugBehavior extends CBehavior
 		// Remove delimiter from ends
 		$string = trim($string, $this->delimiter);
 
-		return $this->lowercase ? mb_strtolower($string, 'UTF-8') : $string;
+		// Transform in lower-case
+		if ($this->lowercase) {
+			$string = mb_strtolower($string, 'UTF-8');
+		}
+
+		return $string;
 	}
 }
