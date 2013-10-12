@@ -52,11 +52,6 @@ class SlugBehavior extends CBehavior
 					$this,
 					$this->slugAttribute
 				));
-			$list->add(CValidator::createValidator(
-					'validateUniqueSlug',
-					$this,
-					$this->slugAttribute
-				));
 		}
 	}
 
@@ -65,21 +60,17 @@ class SlugBehavior extends CBehavior
 		$owner = $this->getOwner();
 		$title = $owner->getAttribute($this->sourceAttribute);
 		$slug  = $owner->getAttribute($this->slugAttribute);
+		$i = 1;
 
-		if (!empty($title) && empty($slug)) {
-			$owner->setAttribute($this->slugAttribute, $this->generateSlug($title));
+		if (!empty($title) && empty($slug))
+		{
+			$slug = $this->generateSlug($title);
+			
+			while ($this->filterBySlug($slug)->count()>0)
+				$slug = $this->generateSlug($title) . '_' . $i++;
+
+			$owner->setAttribute($this->slugAttribute, $slug);
 		}
-	}
-
-	public function validateUniqueSlug()
-	{
-		$owner = $this->getOwner();
-		CValidator::createValidator('unique', $owner, $this->slugAttribute)
-			->validate($owner, $this->slugAttribute);
-		// Duplicate errors to source attribute, for show it in forms.
-		$owner->addErrors(array(
-				$this->sourceAttribute => $owner->getErrors($this->slugAttribute)
-			));
 	}
 
 	public function findBySlug($slug, $condition = '', array $params = array())
@@ -94,6 +85,7 @@ class SlugBehavior extends CBehavior
 			->quoteColumnName($owner->getTableAlias() . '.' . $this->slugAttribute);
 		$owner->getDbCriteria()
 			->addCondition($column . ' = :slug', $operator)
+			->addCondition($owner->tableSchema->primaryKey . ' <> ' . $owner->primaryKey)
 			->params[':slug'] = $slug;
 
 		return $this->getOwner();
