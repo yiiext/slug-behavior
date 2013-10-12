@@ -64,8 +64,9 @@ class SlugBehavior extends CBehavior
 	{
 		$owner = $this->getOwner();
 		$title = $owner->getAttribute($this->sourceAttribute);
+		$slug  = $owner->getAttribute($this->slugAttribute);
 
-		if (!empty($title)) {
+		if (!empty($title) && empty($slug)) {
 			$owner->setAttribute($this->slugAttribute, $this->generateSlug($title));
 		}
 	}
